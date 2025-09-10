@@ -18,9 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono = $_POST['telefono'] ?? '';
     $correo = $_POST['correo'] ?? '';
 
-$conexion = new mysqli("sql305.infinityfree.com","if0_39903381", "fYzFQCTA5mOH8","if0_39903381_sistema_web");    if ($conexion->connect_errno) {
-        die("Error de conexión: " . $conexion->connect_error);
-    }
+require "conexion.php";
 
     // Usa sentencia preparada para evitar inyección SQL
     $stmt = $conexion->prepare("INSERT INTO proveedores (nombre, codigo, actividad_economica, telefono, correo) VALUES (?, ?, ?, ?, ?)");

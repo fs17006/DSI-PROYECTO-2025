@@ -5,7 +5,7 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-$conexion = new mysqli("sql305.infinityfree.com","if0_39903381", "fYzFQCTA5mOH8","if0_39903381_sistema_web");
+require "conexion.php";
 $sql = "SELECT f.id, f.numero_factura, f.fecha, f.monto, p.nombre AS proveedor 
         FROM facturas f
         INNER JOIN proveedores p ON f.proveedor_id = p.id";

@@ -10,7 +10,7 @@ if ($_SESSION['perfil'] !== 'ESTANDAR' && $_SESSION['perfil'] !== 'ADMINISTRADOR
     exit();
 }
 
-$conexion = new mysqli("sql305.infinityfree.com","if0_39903381", "fYzFQCTA5mOH8","if0_39903381_sistema_web");
+require "conexion.php";
 $estadoFiltro = isset($_GET['estado']) ? $_GET['estado'] : '';
 
 $sql = "

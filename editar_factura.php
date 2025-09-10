@@ -5,7 +5,7 @@ if (!isset($_SESSION['usuario'])) {
     exit();
 }
 
-$conexion = new mysqli("sql305.infinityfree.com","if0_39903381", "fYzFQCTA5mOH8","if0_39903381_sistema_web");
+require "conexion.php";
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
     $resultado = $conexion->query("SELECT * FROM facturas WHERE id = $id");
