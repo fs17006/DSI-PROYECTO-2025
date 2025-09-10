@@ -22,10 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
-        echo "Pago registrado con éxito.";
-    } else {
-        echo "Error al registrar el pago.";
-    }
+    header("Location: estado_pagos.php?mensaje=registrado");
+    exit();
+} else {
+    echo "Error al registrar el pago.";
+}
+
 
     $stmt->close();
 }
