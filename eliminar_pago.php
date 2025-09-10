@@ -16,7 +16,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     echo "ID de pago no válido.";
     exit();
 }
-
+$id_pago = (int) $_GET['id']; 
 require "conexion.php";
 // Verifica si el pago existe
 $verificar = $conexion->prepare("SELECT id FROM pagos WHERE id = ?");
