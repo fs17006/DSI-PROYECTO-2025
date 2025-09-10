@@ -10,8 +10,7 @@ if ($_SESSION['perfil'] !== 'ADMINISTRADOR' && $_SESSION['perfil'] !== 'ESTANDAR
     exit();
 }
 
-$conexion = new mysqli("localhost", "root", "", "sistema_web");
-
+$conexion = new mysqli("sql305.infinityfree.com","if0_39903381", "fYzFQCTA5mOH8","if0_39903381_sistema_web");
 $resultado = $conexion->query("SELECT * FROM proveedores");
 
 ?>
