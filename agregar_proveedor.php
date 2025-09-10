@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $telefono = $_POST['telefono'] ?? '';
     $correo = $_POST['correo'] ?? '';
 
-$conexion = new mysqli("sql305.infinityfree.com","if0_39903381", "fYzFQCTA5mOH8","if0_39903381_sistema_web");    if ($conexion->connect_errno) {
+require "conexion.php";
         die("Error de conexión: " . $conexion->connect_error);
     }
 
