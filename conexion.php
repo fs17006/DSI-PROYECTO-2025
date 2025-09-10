@@ -1,7 +1,7 @@
 <?php
 $servername = "sql305.infinityfree.com";   // Host
 $username   = "if0_39903381";              // Usuario
-$password   = "fYzFQCTA5m0H8";             // Contraseña
+$password   = "fYzFQCTA5mOH8";             // Contraseña
 $dbname     = "if0_39903381_sistema_web";  // Base de datos
 
 // Crear conexión
