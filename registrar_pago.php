@@ -10,8 +10,7 @@ if ($_SESSION['perfil'] !== 'ADMINISTRADOR' && $_SESSION['perfil'] !== 'CONTADOR
     exit();
 }
 
-$conexion = new mysqli("sql305.infinityfree.com","if0_39903381", "fYzFQCTA5mOH8","if0_39903381_sistema_web");
-
+require "conexion.php";
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $factura_id = $_POST['factura_id'];
     $fecha_pago = $_POST['fecha_pago'];

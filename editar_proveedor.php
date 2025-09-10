@@ -17,8 +17,7 @@ if (!$id) {
 }
 
 require "conexion.php";
-    die("Error de conexión: " . $conexion->connect_error);
-}
+
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = $_POST['nombre'] ?? '';

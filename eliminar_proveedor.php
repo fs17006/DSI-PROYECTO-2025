@@ -17,8 +17,6 @@ if (!$id) {
 }
 
 require "conexion.php";
-    die("Error de conexión: " . $conexion->connect_error);
-}
 
 // Opcional: verificar que no existan facturas vinculadas antes de eliminar
 $stmt_check = $conexion->prepare("SELECT COUNT(*) as total FROM facturas WHERE proveedor_id = ?");

@@ -17,8 +17,7 @@ if (!isset($_GET['id']) || !is_numeric($_GET['id'])) {
     exit();
 }
 
-$conexion = new mysqli("sql305.infinityfree.com","if0_39903381", "fYzFQCTA5mOH8","if0_39903381_sistema_web");$id_pago = intval($_GET['id']);
-
+require "conexion.php";
 // Verifica si el pago existe
 $verificar = $conexion->prepare("SELECT id FROM pagos WHERE id = ?");
 $verificar->bind_param("i", $id_pago);

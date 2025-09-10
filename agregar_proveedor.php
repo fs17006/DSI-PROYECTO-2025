@@ -19,8 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $correo = $_POST['correo'] ?? '';
 
 require "conexion.php";
-        die("Error de conexión: " . $conexion->connect_error);
-    }
 
     // Usa sentencia preparada para evitar inyección SQL
     $stmt = $conexion->prepare("INSERT INTO proveedores (nombre, codigo, actividad_economica, telefono, correo) VALUES (?, ?, ?, ?, ?)");
