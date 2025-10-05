@@ -8,6 +8,7 @@ $perfil = $_SESSION['perfil'];
             <li><a href="plantilla.php">Panel Principal</a></li>
         <?php endif; ?>
         <li><a href="lista_proveedores.php">Administrar Proveedor</a></li>
+        <li><a href="lista_usuarios.php">Administrar Usuarios</a></li>
         <li><a href="lista_facturas.php">Administrar Facturas</a></li>
         <li><a href="estado_pagos.php">Estado de Pagos</a></li>
 

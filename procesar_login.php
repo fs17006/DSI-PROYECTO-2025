@@ -21,8 +21,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        // ⚠️ Como por ahora tus contraseñas son texto plano (123), comparamos directamente
-        // Más adelante usaremos password_verify() con contraseñas encriptadas
         if ($row['contrasena'] === $contrasena) {
             $_SESSION['usuario'] = $row['usuario'];
             $_SESSION['perfil'] = $row['perfil'];

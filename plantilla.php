@@ -4,6 +4,11 @@ if (!isset($_SESSION['usuario'])) {
     header('Location: index.php');
     exit();
 }
+
+if ($_SESSION['perfil'] !== 'ADMINISTRADOR') {
+    echo "Acceso denegado.";
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html lang="es">
