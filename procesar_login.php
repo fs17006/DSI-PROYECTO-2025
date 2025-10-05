@@ -1,14 +1,13 @@
 <?php
 session_start();
 require "conexion.php";
-
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = trim($_POST['usuario']);
     $contrasena = trim($_POST['contrasena']);
 
     // Consulta segura usando prepared statements
     $sql = "SELECT * FROM usuarios WHERE usuario = ?";
-    $stmt = $conn->prepare($sql);
+    $stmt = $conexion->prepare($sql);
     $stmt->bind_param("s", $usuario);
     $stmt->execute();
     $resultado = $stmt->get_result();
@@ -37,6 +36,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     $stmt->close();
-    $conn->close();
+    $conexion->close();
 }
 ?>
