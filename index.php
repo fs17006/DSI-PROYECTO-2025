@@ -27,4 +27,5 @@ if (isset($_SESSION['usuario'])) {
         <form action="crear_usuario.php" method="GET" style="margin-top: 15px;">
             <input type="submit" value="Crear Usuario" />
     </div>
+</body>
 </html>
