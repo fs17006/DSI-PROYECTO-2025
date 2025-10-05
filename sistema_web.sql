@@ -7,6 +7,7 @@ CREATE TABLE usuarios (
     usuario VARCHAR(50) NOT NULL,
     contrasena VARCHAR(255) NOT NULL,
     perfil ENUM('ADMINISTRADOR', 'MONITOREO', 'ESTANDAR') NOT NULL
+    activo BOOLEAN DEFAULT TRUE 
 );
 
 INSERT INTO usuarios (usuario, contrasena, perfil) VALUES
