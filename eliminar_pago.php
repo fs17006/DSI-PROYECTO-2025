@@ -36,6 +36,6 @@ if ($eliminar->execute()) {
     header("Location: estado_pagos.php?mensaje=eliminado");
     exit();
 } else {
-    echo "Error al eliminar el pago.";
+    echo "Error al eliminar de pago.";
 }
 ?>
