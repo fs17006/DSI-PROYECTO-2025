@@ -65,7 +65,7 @@ $resultado = $conexion->query($sql);
                         <?php endif; ?>
                         <a href="consulta_pedidos.php?id=<?= $pedido['id'] ?>">Ver Detalle</a>
                         <a href="historial_pedidos.php?id=<?= $pedido['proveedor_id'] ?>" class="btn">Historial por Proveedor</a>
-                        <a href="eliminar_pedido.php?id=<?= $fila['id'] ?>" onclick="return confirm('¿Seguro de eliminar este pedido?')">Eliminar</a>
+                        <a href="eliminar_pedido.php?id=<?= $pedido['id'] ?>" onclick="return confirm('¿Seguro de eliminar este pedido?')">Eliminar</a>
 
                     </td>
                 </tr>

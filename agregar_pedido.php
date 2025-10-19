@@ -26,7 +26,7 @@ $mensaje = "";
 // Guardar pedido
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $proveedor_id = (int)($_POST['proveedor_id'] ?? 0);
-    $fecha = $_POST['fecha'] ?? date('Y-m-d');
+    $fecha = date('Y-m-d H:i:s');
     $productos_ids = $_POST['producto_id'] ?? [];
     $cantidades = $_POST['cantidad'] ?? [];
     $precios = $_POST['precio_unitario'] ?? [];
@@ -37,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Insertar pedido
         $stmt = $conexion->prepare("INSERT INTO pedidos (proveedor_id, fecha, estado) VALUES (?, ?, 'PENDIENTE')");
         $stmt->bind_param("is", $proveedor_id, $fecha);
+
         $stmt->execute();
         $pedido_id = $stmt->insert_id;
         $stmt->close();
