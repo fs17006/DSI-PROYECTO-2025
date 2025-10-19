@@ -7,7 +7,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $contrasena = trim($_POST['contrasena']);
 
     // Consulta segura usando prepared statements
-    $sql = "SELECT usuario, contrasena, perfil, activo FROM usuarios WHERE usuario = ?";
+    $sql = "SELECT id, usuario, contrasena, perfil, activo FROM usuarios WHERE usuario = ?";
     $stmt = $conexion->prepare($sql);
     $stmt->bind_param("s", $usuario);
     $stmt->execute();
@@ -25,6 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Verificar contraseña encriptada
         if (password_verify($contrasena, $row['contrasena'])) {
             // Iniciar sesión
+            $_SESSION['id'] = $row['id'];  //Guarda el id del usuario logueado
             $_SESSION['usuario'] = $row['usuario'];
             $_SESSION['perfil'] = $row['perfil'];
 

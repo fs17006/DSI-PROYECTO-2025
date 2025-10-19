@@ -1,5 +1,4 @@
 <?php
-
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -24,50 +23,12 @@ if (!$id) {
     exit();
 }
 
-// Obtener lista de usuarios
+// Obtener lista de usuarios (para asignar al proveedor)
 $usuariosRes = $conexion->query("SELECT id, nombre_completo, correo FROM usuarios WHERE perfil IN ('ADMINISTRADOR','ESTANDAR')");
-
-// Obtener datos del proveedor
-$stmt = $conexion->prepare("SELECT nombre, codigo, actividad_economica, telefono, usuario_id FROM proveedores WHERE id=?");
-$stmt->bind_param("i", $id);
-$stmt->execute();
-$stmt->bind_result($nombre, $codigo, $actividad, $telefono, $usuario_id);
-$stmt->fetch();
-$stmt->close();
 
 $mensaje = "";
 
-// Obtener datos actuales
-$stmtOld = $conexion->prepare("SELECT nombre, codigo, actividad_economica, telefono FROM proveedores WHERE id=?");
-$stmtOld->bind_param("i", $id);
-$stmtOld->execute();
-$stmtOld->bind_result($oldNombre, $oldCodigo, $oldActividad, $oldTelefono);
-$stmtOld->fetch();
-$stmtOld->close();
-
-// Comparar campo por campo y registrar cambios
-$campos = [
-    'nombre' => [$oldNombre, $nombre],
-    'codigo' => [$oldCodigo, $codigo],
-    'actividad_economica' => [$oldActividad, $actividad],
-    'telefono' => [$oldTelefono, $telefono]
-];
-
-foreach ($campos as $campo => [$antiguo, $nuevo]) {
-    if ($antiguo != $nuevo) {
-        $stmtHist = $conexion->prepare("INSERT INTO historial_proveedores (proveedor_id, campo, valor_anterior, valor_nuevo, usuario_id) VALUES (?, ?, ?, ?, ?)");
-        $stmtHist->bind_param("isssi", $id, $campo, $antiguo, $nuevo, $_SESSION['id']); // $_SESSION['id'] = usuario logueado
-        $stmtHist->execute();
-        $stmtHist->close();
-    }
-}
-
-// Luego se actualiza la tabla proveedores
-$stmtUpd = $conexion->prepare("UPDATE proveedores SET nombre=?, codigo=?, actividad_economica=?, telefono=? WHERE id=?");
-$stmtUpd->bind_param("ssssi", $nombre, $codigo, $actividad, $telefono, $id);
-$stmtUpd->execute();
-
-// Procesar actualización
+// === SI SE ENVÍA EL FORMULARIO ===
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim($_POST['nombre'] ?? '');
     $codigo = trim($_POST['codigo'] ?? '');
@@ -78,7 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($nombre) || empty($codigo) || empty($actividad) || empty($telefono) || $usuario_id <= 0) {
         $mensaje = "Todos los campos son obligatorios.";
     } else {
-        // Obtener valores antiguos de la base
+        // Obtener valores antiguos
         $stmtOld = $conexion->prepare("SELECT nombre, codigo, actividad_economica, telefono FROM proveedores WHERE id=?");
         $stmtOld->bind_param("i", $id);
         $stmtOld->execute();
@@ -110,13 +71,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmtUpdate->close();
 
         $mensaje = "Proveedor actualizado correctamente.";
-        header("Location: lista_proveedores.php"); exit();
-            } else {
-                $mensaje = "Error al actualizar proveedor.";
-            }
-            $stmtUpdate->close();
-        }
-        $stmtCheck->close();
+        header("Location: lista_proveedores.php");
+        exit();
+    }
+} else {
+    // === SI SOLO SE CARGA LA PÁGINA ===
+    $stmt = $conexion->prepare("SELECT nombre, codigo, actividad_economica, telefono, usuario_id FROM proveedores WHERE id=?");
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $stmt->bind_result($nombre, $codigo, $actividad, $telefono, $usuario_id);
+    $stmt->fetch();
+    $stmt->close();
+}
 
 $conexion->close();
 ?>

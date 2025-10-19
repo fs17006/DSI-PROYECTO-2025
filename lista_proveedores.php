@@ -27,7 +27,6 @@ $resultado = $conexion->query("SELECT * FROM proveedores");
     <div class="contenido">
         <h2>Lista de Proveedores</h2>
         <a href="agregar_proveedor.php">Agregar Proveedor</a>
-        <a href="historial_proveedor.php">Historial de proveedores</a>
         <table border="1" cellpadding="5" cellspacing="0">
             <tr>
                 <th>Nombre</th>
@@ -44,6 +43,8 @@ $resultado = $conexion->query("SELECT * FROM proveedores");
                     <td><?= $fila['telefono'] ?></td>
                     <td>
                         <a href="editar_proveedor.php?id=<?= $fila['id'] ?>">Editar</a>
+                        <a href="historial_proveedor.php?id=<?= $fila['id'] ?>" class="btn">Historial</a>
+
                         <?php if ($_SESSION['perfil'] === 'ADMINISTRADOR'): ?>
                             <a href="eliminar_proveedor.php?id=<?= $fila['id'] ?>" onclick="return confirm('¿Seguro que deseas eliminar este proveedor?');">Eliminar</a>
                         <?php endif; ?>
