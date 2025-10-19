@@ -4,11 +4,14 @@ USE sistema_web;
 
 CREATE TABLE usuarios (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    usuario VARCHAR(50) NOT NULL,
+    nombre_completo VARCHAR(100) NOT NULL,
+    correo VARCHAR(100) NOT NULL UNIQUE,
+    usuario VARCHAR(50) NOT NULL UNIQUE,
     contrasena VARCHAR(255) NOT NULL,
-    perfil ENUM('ADMINISTRADOR', 'MONITOREO', 'ESTANDAR') NOT NULL
-    activo BOOLEAN DEFAULT TRUE 
+    perfil ENUM('ADMINISTRADOR', 'MONITOREO', 'ESTANDAR') NOT NULL DEFAULT 'ESTANDAR',
+    activo BOOLEAN DEFAULT TRUE
 );
+
 
 INSERT INTO usuarios (usuario, contrasena, perfil) VALUES
 ('administrador', '123', 'ADMINISTRADOR'),
