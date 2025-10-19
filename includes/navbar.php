@@ -17,7 +17,7 @@ $perfil = $_SESSION['perfil'];
             <li><a href="registrar_pago.php">Registrar Pagos</a></li>
         <?php endif; ?>
 
-        <li><a href="#">Generar Reportes</a></li>
+        <li><a href="lista_productos.php">Productos</a></li>
         <li><a href="#">Consultar Dashboard</a></li>
         <li class="logout"><a href="logout.php">Cerrar sesión</a></li>
     </ul>
