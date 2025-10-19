@@ -39,22 +39,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Agregar Producto</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        .required::after { content: " *"; color: red; }
+        .error-message { color: red; display: none; margin-bottom: 10px; }
+        input:invalid { border-color: red; }
+    </style>
 </head>
 <body>
-    <div class="contenido">
-        <h2>Registrar Producto</h2>
-        <form action="" method="POST" class="formulario">
-            <label for="codigo">Código:</label>
-            <input type="text" name="codigo" required>
+    <?php include("includes/navbar.php"); ?>
+<div class="contenido">
+    <h2>Registrar Producto</h2>
 
-            <label for="nombre">Nombre:</label>
-            <input type="text" name="nombre" required>
+    <div class="error-message" id="errorMsg">Por favor complete todos los campos obligatorios.</div>
 
-            <label for="precio_unitario">Precio unitario:</label>
-            <input type="number" name="precio_unitario" step="0.01" min="0.01" required>
+    <form action="" method="POST" class="formulario" id="formProducto">
+        <label for="codigo" class="required">Código:</label>
+        <input type="text" name="codigo" required>
 
-            <button type="submit" class="btn">Registrar Producto</button>
-        </form>
-    </div>
+        <label for="nombre" class="required">Nombre:</label>
+        <input type="text" name="nombre" required>
+
+        <label for="precio_unitario" class="required">Precio unitario:</label>
+        <input type="number" name="precio_unitario" step="0.01" min="0.01" required>
+
+        <button type="submit" class="btn">Registrar Producto</button>
+        <a href="lista_productos.php" class="btn">Volver</a>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('formProducto');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', function(e) {
+        let allFilled = true;
+        form.querySelectorAll('input[required]').forEach(input => {
+            if (!input.value.trim()) {
+                allFilled = false;
+            }
+        });
+
+        if (!allFilled) {
+            e.preventDefault(); // evita enviar formulario
+            errorMsg.style.display = 'block'; // muestra mensaje
+        } else {
+            errorMsg.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>

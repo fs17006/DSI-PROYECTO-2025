@@ -44,29 +44,59 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <title>Agregar Cliente</title>
     <link rel="stylesheet" href="css/estilos.css">
+    <style>
+        .required::after { content: " *"; color: red; }
+        .error-message { color: red; display: none; margin-bottom: 10px; }
+        input:invalid { border-color: red; }
+    </style>
 </head>
 <body>
-    <?php include("includes/navbar.php"); ?>
-    <div class="contenido">
-        <h2>Registrar Cliente</h2>
-        <form method="POST" class="formulario">
-            <label>Nombre:</label>
-            <input type="text" name="nombre" required>
+<?php include("includes/navbar.php"); ?>
+<div class="contenido">
+    <h2>Registrar Cliente</h2>
 
-            <label>DUI:</label>
-            <input type="text" name="dui" required>
+    <div class="error-message" id="errorMsg">Por favor complete todos los campos obligatorios.</div>
 
-            <label>Teléfono:</label>
-            <input type="text" name="telefono">
+    <form method="POST" class="formulario" id="formCliente">
+        <label class="required">Nombre:</label>
+        <input type="text" name="nombre" required>
 
-            <label>Correo:</label>
-            <input type="email" name="correo" required>
+        <label class="required">DUI:</label>
+        <input type="text" name="dui" required>
 
-            <label>Dirección:</label>
-            <input type="text" name="direccion">
+        <label>Teléfono:</label>
+        <input type="text" name="telefono">
 
-            <button type="submit"class="btn">Guardar </button>
-        </form>
-    </div>
+        <label class="required">Correo:</label>
+        <input type="email" name="correo" required>
+
+        <label>Dirección:</label>
+        <input type="text" name="direccion">
+
+        <button type="submit" class="btn">Guardar</button>
+        <a href="lista_clientes.php" class="btn">Volver</a>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('formCliente');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', function(e) {
+        let allFilled = true;
+        form.querySelectorAll('input[required]').forEach(input => {
+            if (!input.value.trim()) {
+                allFilled = false;
+            }
+        });
+
+        if (!allFilled) {
+            e.preventDefault();
+            errorMsg.style.display = 'block';
+        } else {
+            errorMsg.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>

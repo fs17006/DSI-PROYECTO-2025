@@ -37,25 +37,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/estilos.css">
     <title>Agregar Usuario</title>
+    <style>
+        .required::after { content: " *"; color: red; }
+        .error-message { color: red; display: none; margin-bottom: 10px; }
+        input:invalid { border-color: red; }
+    </style>
 </head>
 <body>
-    <div class="contenido">
-        <h2>Crear Cuenta</h2>
-        <form action="agregar_usuario.php" method="POST" class="formulario">
-            <label for="nombre_completo">Nombre completo:</label>
-            <input type="text" name="nombre_completo" required>
+<div class="contenido">
+    <h2>Crear Cuenta</h2>
 
-            <label for="correo">Correo electrónico:</label>
-            <input type="email" name="correo" required>
+    <div class="error-message" id="errorMsg">Por favor complete todos los campos obligatorios.</div>
 
-            <label for="usuario">Usuario:</label>
-            <input type="text" name="usuario" required>
+    <form action="agregar_usuario.php" method="POST" class="formulario" id="formUsuario">
+        <label for="nombre_completo" class="required">Nombre completo:</label>
+        <input type="text" name="nombre_completo" required>
 
-            <label for="contrasena">Contraseña:</label>
-            <input type="password" name="contrasena" required>
+        <label for="correo" class="required">Correo electrónico:</label>
+        <input type="email" name="correo" required>
 
-            <button type="submit" class="btn">Registrar Usuario</button>
-        </form>
-    </div>
+        <label for="usuario" class="required">Usuario:</label>
+        <input type="text" name="usuario" required>
+
+        <label for="contrasena" class="required">Contraseña:</label>
+        <input type="password" name="contrasena" required>
+
+        <button type="submit" class="btn">Registrar Usuario</button>
+        <a href="index.php" class="btn">Volver</a>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('formUsuario');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', function(e) {
+        let allFilled = true;
+        form.querySelectorAll('input[required]').forEach(input => {
+            if (!input.value.trim()) {
+                allFilled = false;
+            }
+        });
+
+        if (!allFilled) {
+            e.preventDefault(); // Evita enviar formulario
+            errorMsg.style.display = 'block'; // Muestra mensaje
+        } else {
+            errorMsg.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>

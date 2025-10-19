@@ -26,7 +26,7 @@ $resultado = $conexion->query("SELECT * FROM usuarios");
     <?php include("includes/navbar.php"); ?>
     <div class="contenido">
         <h2>Lista de Usuarios</h2>
-        <a href="agregar_usuario.php">Agregar usuario</a>
+        <a href="agregar_usuario_sesion.php">Agregar usuario</a>
         <table border="1" cellpadding="5" cellspacing="0">
             <tr>
                 <th>Nombre de usuario</th>

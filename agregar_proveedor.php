@@ -63,30 +63,42 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <link rel="stylesheet" href="css/estilos.css">
     <title>Agregar Proveedor</title>
+    <style>
+        .required::after {
+            content: " *";
+            color: red;
+        }
+        .error-message {
+            color: red;
+            display: none;
+            margin-bottom: 10px;
+        }
+        input:invalid, select:invalid {
+            border-color: red;
+        }
+    </style>
 </head>
 <body>
 <?php include("includes/navbar.php"); ?>
 <div class="contenido">
     <h2>Agregar Proveedor</h2>
 
-    <?php if (!empty($mensaje)): ?>
-        <p style="color:green;"><?= htmlspecialchars($mensaje) ?></p>
-    <?php endif; ?>
+    <div class="error-message" id="errorMsg">Por favor complete todos los campos obligatorios.</div>
 
-    <form action="agregar_proveedor.php" method="POST" class="formulario">
-        <label for="nombre">Nombre:</label>
+    <form id="proveedorForm" action="agregar_proveedor.php" method="POST" class="formulario">
+        <label for="nombre" class="required">Nombre:</label>
         <input type="text" name="nombre" required>
 
-        <label for="codigo">NIT/DUI:</label>
+        <label for="codigo" class="required">NIT/DUI:</label>
         <input type="text" name="codigo" required>
 
-        <label for="actividad_economica">Actividad Económica:</label>
+        <label for="actividad_economica" class="required">Actividad Económica:</label>
         <input type="text" name="actividad_economica" required>
 
-        <label for="telefono">Teléfono:</label>
+        <label for="telefono" class="required">Teléfono:</label>
         <input type="text" name="telefono" required>
 
-        <label for="usuario_id">Usuario Contacto:</label>
+        <label for="usuario_id" class="required">Usuario Contacto:</label>
         <select name="usuario_id" required>
             <option value="">-- Seleccione un usuario --</option>
             <?php while ($u = $usuariosRes->fetch_assoc()): ?>
@@ -98,5 +110,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <a href="lista_proveedores.php" class="btn">Volver</a>
     </form>
 </div>
+
+<script>
+    const form = document.getElementById('proveedorForm');
+    const errorMsg = document.getElementById('errorMsg');
+
+    form.addEventListener('submit', function(e) {
+        let allFilled = true;
+        form.querySelectorAll('input[required], select[required]').forEach(input => {
+            if (!input.value.trim()) {
+                allFilled = false;
+            }
+        });
+
+        if (!allFilled) {
+            e.preventDefault(); // Evita enviar el formulario
+            errorMsg.style.display = 'block'; // Muestra mensaje de error
+        } else {
+            errorMsg.style.display = 'none';
+        }
+    });
+</script>
 </body>
 </html>

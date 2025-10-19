@@ -69,52 +69,121 @@ $stmt->execute();
         .detalle-row { display: flex; gap: 10px; margin-bottom: 5px; }
         .detalle-row select, .detalle-row input { flex: 1; }
         .btn-add { margin-top: 10px; }
+        .required::after { content: " *"; color: red; }
+        .error-message { color: red; display: none; margin-bottom: 10px; }
+        input:invalid, select:invalid { border-color: red; }
     </style>
 </head>
 <body>
-    <?php include("includes/navbar.php"); ?>
+<?php include("includes/navbar.php"); ?>
 
+<div class="contenido">
     <h2>Agregar Factura</h2>
-<form method="POST" action="" id="formFactura">
-    <label>Número de Factura:</label>
-    <input type="text" name="numero_factura" required>
 
-    <label>Fecha:</label>
-    <input type="date" name="fecha" required>
+    <div class="error-message" id="errorMsg">Por favor complete todos los campos obligatorios.</div>
 
-    <label>Proveedor:</label>
-    <select name="proveedor_id" required>
-        <?php while ($p = $proveedores->fetch_assoc()): ?>
-            <option value="<?= $p['id'] ?>"><?= htmlspecialchars($p['nombre']) ?></option>
-        <?php endwhile; ?>
-    </select>
+    <form method="POST" action="" id="formFactura">
+        <label class="required">Número de Factura:</label>
+        <input type="text" name="numero_factura" required>
 
-    <h3>Detalles de la Factura</h3>
-    <div id="detalle-container">
-        <div class="detalle-row">
-            <select name="producto_id[]" class="producto-select" onchange="actualizarPrecio(this)">
-                <?php
-                $productos->data_seek(0); // reinicia el puntero
-                while ($prod = $productos->fetch_assoc()):
-                ?>
-                    <option value="<?= $prod['id'] ?>" data-precio="<?= $prod['precio_unitario'] ?>">
-                        <?= htmlspecialchars($prod['nombre']) ?>
-                    </option>
-                <?php endwhile; ?>
-            </select>
-            <input type="number" name="cantidad[]" placeholder="Cantidad" min="1" value="1" oninput="calcularTotal()" required>
-            <input type="number" step="0.01" name="precio_unitario[]" placeholder="Precio Unitario" readonly>
+        <label class="required">Fecha:</label>
+        <input type="date" name="fecha" required>
+
+        <label class="required">Proveedor:</label>
+        <select name="proveedor_id" required>
+            <?php while ($p = $proveedores->fetch_assoc()): ?>
+                <option value="<?= $p['id'] ?>"><?= htmlspecialchars($p['nombre']) ?></option>
+            <?php endwhile; ?>
+        </select>
+
+        <h3>Detalles de la Factura</h3>
+        <div id="detalle-container">
+            <div class="detalle-row">
+                <select name="producto_id[]" class="producto-select" onchange="actualizarPrecio(this)" required>
+                    <?php
+                    $productos->data_seek(0);
+                    while ($prod = $productos->fetch_assoc()):
+                    ?>
+                        <option value="<?= $prod['id'] ?>" data-precio="<?= $prod['precio_unitario'] ?>">
+                            <?= htmlspecialchars($prod['nombre']) ?>
+                        </option>
+                    <?php endwhile; ?>
+                </select>
+                <input type="number" name="cantidad[]" placeholder="Cantidad" min="1" value="1" oninput="calcularTotal()" required>
+                <input type="number" step="0.01" name="precio_unitario[]" placeholder="Precio Unitario" readonly>
+            </div>
         </div>
-    </div>
 
-    <button type="button" class="btn-add" onclick="agregarDetalle()">+ Agregar Producto</button>
-    <br><br>
-    <label>Total Factura:</label>
-    <input type="number" id="monto_total" step="0.01" readonly>
-    <input type="hidden" name="monto" id="monto_oculto">
-    <br><br>
-    <button type="submit" class="btn">Guardar Factura</button>
-</form>
+        <button type="button" class="btn btn-add" onclick="agregarDetalle()">+ Agregar Producto</button>
+        <br><br>
+
+        <label class="required">Total Factura:</label>
+        <input type="number" id="monto_total" step="0.01" readonly>
+        <input type="hidden" name="monto" id="monto_oculto">
+        <br><br>
+
+        <button type="submit" class="btn">Guardar Factura</button>
+        <a href="lista_facturas.php" class="btn">Volver</a>
+    </form>
+</div>
+
+<script>
+    const form = document.getElementById('formFactura');
+    const errorMsg = document.getElementById('errorMsg');
+
+    // Validación general antes de enviar
+    form.addEventListener('submit', function(e) {
+        let allFilled = true;
+        form.querySelectorAll('input[required], select[required]').forEach(input => {
+            if (!input.value.trim()) {
+                allFilled = false;
+            }
+        });
+
+        if (!allFilled) {
+            e.preventDefault();
+            errorMsg.style.display = 'block';
+        } else {
+            errorMsg.style.display = 'none';
+            calcularTotal(); // asegurar que total esté actualizado
+        }
+    });
+
+    // Calcular precios unitarios y total
+    function actualizarPrecio(select) {
+        const precio = parseFloat(select.selectedOptions[0].dataset.precio);
+        const row = select.parentElement;
+        const inputPrecio = row.querySelector('input[name="precio_unitario[]"]');
+        inputPrecio.value = precio.toFixed(2);
+        calcularTotal();
+    }
+
+    function calcularTotal() {
+        let total = 0;
+        document.querySelectorAll('#detalle-container .detalle-row').forEach(row => {
+            const cantidad = parseFloat(row.querySelector('input[name="cantidad[]"]').value) || 0;
+            const precio = parseFloat(row.querySelector('input[name="precio_unitario[]"]').value) || 0;
+            total += cantidad * precio;
+        });
+        document.getElementById('monto_total').value = total.toFixed(2);
+        document.getElementById('monto_oculto').value = total.toFixed(2);
+    }
+
+    // Agregar nueva fila de detalle
+    function agregarDetalle() {
+        const container = document.getElementById('detalle-container');
+        const row = container.children[0].cloneNode(true);
+        row.querySelectorAll('input').forEach(input => input.value = input.name === 'cantidad[]' ? 1 : '');
+        container.appendChild(row);
+    }
+
+    // Inicializar precios en la primera fila
+    document.querySelectorAll('.producto-select').forEach(sel => actualizarPrecio(sel));
+</script>
+</body>
+</html>
+
+
 
 <script>
     function actualizarPrecio(select) {
