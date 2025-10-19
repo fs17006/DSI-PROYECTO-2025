@@ -2,10 +2,13 @@
 $perfil = $_SESSION['perfil'];
 ?>
 <div class="navbar">
-    <h1 class="navbar-title">Sistema de Gestión de Proveedores</h1>
+    <a href="plantilla.php" class="btn">
+    <h2>Sistema de gestion de proveedores</h2>
+</a>
+
     <ul class="navbar-menu">
         <?php if ($perfil == 'ADMINISTRADOR'): ?>
-            <li><a href="plantilla.php">Panel Principal</a></li>
+            <li><a href="lista_pedidos.php">Administrar Pedidos</a></li>
         <?php endif; ?>
         <li><a href="lista_proveedores.php">Administrar Proveedor</a></li>
         <li><a href="lista_usuarios.php">Administrar Usuarios</a></li>
@@ -17,7 +20,7 @@ $perfil = $_SESSION['perfil'];
             <li><a href="registrar_pago.php">Registrar Pagos</a></li>
         <?php endif; ?>
 
-        <li><a href="lista_productos.php">Productos</a></li>
+        <li><a href="lista_productos.php">Administrar Productos</a></li>
         <li><a href="#">Consultar Dashboard</a></li>
         <li class="logout"><a href="logout.php">Cerrar sesión</a></li>
     </ul>
