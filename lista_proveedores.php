@@ -33,7 +33,6 @@ $resultado = $conexion->query("SELECT * FROM proveedores");
                 <th>Código</th>
                 <th>Actividad Económica</th>
                 <th>Teléfono</th>
-                <th>Correo</th>
                 <th>Acciones</th>
             </tr>
             <?php while($fila = $resultado->fetch_assoc()): ?>
@@ -42,7 +41,6 @@ $resultado = $conexion->query("SELECT * FROM proveedores");
                     <td><?= $fila['codigo'] ?></td>
                     <td><?= $fila['actividad_economica'] ?></td>
                     <td><?= $fila['telefono'] ?></td>
-                    <td><?= $fila['correo'] ?></td>
                     <td>
                         <a href="editar_proveedor.php?id=<?= $fila['id'] ?>">Editar</a>
                         <?php if ($_SESSION['perfil'] === 'ADMINISTRADOR'): ?>

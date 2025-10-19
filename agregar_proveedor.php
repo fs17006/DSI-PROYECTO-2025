@@ -11,29 +11,49 @@ if ($_SESSION['perfil'] !== 'ADMINISTRADOR' && $_SESSION['perfil'] !== 'ESTANDAR
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $nombre = $_POST['nombre'] ?? '';
-    $codigo = $_POST['codigo'] ?? '';
-    $actividad = $_POST['actividad_economica'] ?? '';
-    $telefono = $_POST['telefono'] ?? '';
-    $correo = $_POST['correo'] ?? '';
-
 require "conexion.php";
 
-    // Usa sentencia preparada para evitar inyección SQL
-    $stmt = $conexion->prepare("INSERT INTO proveedores (nombre, codigo, actividad_economica, telefono, correo) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $nombre, $codigo, $actividad, $telefono, $correo);
-    $stmt->execute();
+$mensaje = "";
 
-    if ($stmt->affected_rows > 0) {
-        header("Location: lista_proveedores.php");
-        exit();
+// Obtener lista de usuarios para asignar al proveedor
+$usuariosRes = $conexion->query("SELECT id, nombre_completo, correo FROM usuarios WHERE perfil IN ('ADMINISTRADOR','ESTANDAR')");
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $nombre = trim($_POST['nombre'] ?? '');
+    $codigo = trim($_POST['codigo'] ?? '');
+    $actividad = trim($_POST['actividad_economica'] ?? '');
+    $telefono = trim($_POST['telefono'] ?? '');
+    $usuario_id = (int)($_POST['usuario_id'] ?? 0);
+
+    // Validaciones
+    if (empty($nombre) || empty($codigo) || empty($actividad) || empty($telefono) || $usuario_id <= 0) {
+        $mensaje = "Todos los campos son obligatorios.";
     } else {
-        echo "Error al agregar proveedor.";
-    }
+        // Validar que el código (NIT/DUI) no exista
+        $stmtCheck = $conexion->prepare("SELECT id FROM proveedores WHERE codigo = ?");
+        $stmtCheck->bind_param("s", $codigo);
+        $stmtCheck->execute();
+        $stmtCheck->store_result();
 
-    $stmt->close();
-    $conexion->close();
+        if ($stmtCheck->num_rows > 0) {
+            $mensaje = "Ya existe un proveedor con este NIT/DUI.";
+        } else {
+            // Insertar nuevo proveedor
+            $stmt = $conexion->prepare("INSERT INTO proveedores (usuario_id, nombre, codigo, actividad_economica, telefono) VALUES (?, ?, ?, ?, ?)");
+            $stmt->bind_param("issss", $usuario_id, $nombre, $codigo, $actividad, $telefono);
+            $stmt->execute();
+
+            if ($stmt->affected_rows > 0) {
+                $mensaje = "Proveedor registrado exitosamente.";
+                header("Location: lista_proveedores.php"); exit();
+            } else {
+                $mensaje = "Error al agregar proveedor.";
+            }
+
+            $stmt->close();
+        }
+        $stmtCheck->close();
+    }
 }
 ?>
 
@@ -41,30 +61,42 @@ require "conexion.php";
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-	<link rel="stylesheet" href="css/estilos.css">
+    <link rel="stylesheet" href="css/estilos.css">
+    <title>Agregar Proveedor</title>
 </head>
 <body>
-       <?php include("includes/navbar.php"); ?>
-    <div class="contenido">
-	 <h2>Agregar Proveedor</h2>
-        <form action="agregar_proveedor.php" method="POST" class="formulario">
-            <label for="nombre">Nombre:</label>
-            <input type="text" name="nombre" required>
+<?php include("includes/navbar.php"); ?>
+<div class="contenido">
+    <h2>Agregar Proveedor</h2>
 
-            <label for="codigo">Código:</label>
-            <input type="text" name="codigo" required>
+    <?php if (!empty($mensaje)): ?>
+        <p style="color:green;"><?= htmlspecialchars($mensaje) ?></p>
+    <?php endif; ?>
 
-            <label for="actividad_economica">Actividad Económica:</label>
-            <input type="text" name="actividad_economica" required>
+    <form action="agregar_proveedor.php" method="POST" class="formulario">
+        <label for="nombre">Nombre:</label>
+        <input type="text" name="nombre" required>
 
-            <label for="telefono">Teléfono:</label>
-            <input type="text" name="telefono" required>
+        <label for="codigo">NIT/DUI:</label>
+        <input type="text" name="codigo" required>
 
-            <label for="correo">Correo:</label>
-            <input type="email" name="correo" required>
+        <label for="actividad_economica">Actividad Económica:</label>
+        <input type="text" name="actividad_economica" required>
 
-            <button type="submit" class="btn">Guardar Cambios</button>
-        </form>
-    </div>
+        <label for="telefono">Teléfono:</label>
+        <input type="text" name="telefono" required>
+
+        <label for="usuario_id">Usuario Contacto:</label>
+        <select name="usuario_id" required>
+            <option value="">-- Seleccione un usuario --</option>
+            <?php while ($u = $usuariosRes->fetch_assoc()): ?>
+                <option value="<?= $u['id'] ?>"><?= htmlspecialchars($u['nombre_completo']) ?> (<?= $u['correo'] ?>)</option>
+            <?php endwhile; ?>
+        </select>
+
+        <button type="submit" class="btn">Guardar Proveedor</button>
+        <a href="lista_proveedores.php" class="btn">Volver</a>
+    </form>
+</div>
 </body>
 </html>

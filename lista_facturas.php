@@ -33,6 +33,7 @@ $resultado = $conexion->query($sql);
     <div class="contenido">
         <h2>Lista de Facturas</h2>
         <a href="agregar_factura.php">Agregar Nueva Factura</a>
+        <a href="consulta_facturas.php">Consultar Facturas</a>
         <table border="1" cellpadding="5" cellspacing="0">
             <tr>
                 <th>Número</th>

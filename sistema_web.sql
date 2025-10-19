@@ -20,11 +20,12 @@ INSERT INTO usuarios (usuario, contrasena, perfil) VALUES
 
 CREATE TABLE proveedores (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100),
-    codigo VARCHAR(20),
+    usuario_id INT NOT NULL,                -- relación con usuarios
+    nombre VARCHAR(100) NOT NULL,
+    codigo VARCHAR(20) NOT NULL UNIQUE,     -- NIT/DUI
     actividad_economica VARCHAR(100),
     telefono VARCHAR(20),
-    correo VARCHAR(100)
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
 CREATE TABLE facturas (
