@@ -1,12 +1,13 @@
 <?php
 session_start();
 require "conexion.php";
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $usuario = trim($_POST['usuario']);
     $contrasena = trim($_POST['contrasena']);
 
     // Consulta segura usando prepared statements
-    $sql = "SELECT * FROM usuarios WHERE usuario = ?";
+    $sql = "SELECT usuario, contrasena, perfil, activo FROM usuarios WHERE usuario = ?";
     $stmt = $conexion->prepare($sql);
     $stmt->bind_param("s", $usuario);
     $stmt->execute();
@@ -21,9 +22,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             exit();
         }
 
-        if ($row['contrasena'] === $contrasena) {
+        // Verificar contraseña encriptada
+        if (password_verify($contrasena, $row['contrasena'])) {
+            // Iniciar sesión
             $_SESSION['usuario'] = $row['usuario'];
             $_SESSION['perfil'] = $row['perfil'];
+
             header("Location: plantilla.php");
             exit();
         } else {

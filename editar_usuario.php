@@ -25,18 +25,19 @@ if (isset($_GET['id']) && is_numeric($_GET['id'])) {
         echo "Usuario no encontrado.";
         exit();
     }else {
-$usuario = $resultado->fetch_assoc(); // ✅ Aquí se asigna correctamente
+$usuario = $resultado->fetch_assoc(); //  Aquí se asigna correctamente
     }
 }elseif ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Procesar la edición del usuario
     $id = intval($_POST['id']);
+    $nombre_completo = trim($_POST['nombre_completo']);
     $usuario = $_POST['usuario'];
-    $contrasena = $_POST['contrasena'];
+    $correo = trim($_POST['correo']);
     $perfil = $_POST['perfil'];
     $activo = $_POST['activo'];
 
-    $update = $conexion->prepare("UPDATE usuarios SET usuario = ?, contrasena  = ?, perfil  = ?, activo  = ? WHERE id = ?");
-    $update->bind_param("sssii", $usuario, $contrasena, $perfil, $activo, $id);
+    $update = $conexion->prepare("UPDATE usuarios SET nombre_completo = ?, usuario = ?, correo = ?, perfil = ?, activo = ? WHERE id = ?");
+    $update->bind_param("ssssii", $nombre_completo, $usuario, $correo, $perfil, $activo, $id);
 
      if ($update->execute()) {
         echo "<script>alert('Usuario actualizado correctamente'); window.location.href='lista_usuarios.php';</script>";
@@ -72,11 +73,16 @@ $conexion->close();
         <form action="editar_usuario.php" method="POST" class="formulario">
             <input type="hidden" name="id" value="<?= htmlspecialchars($usuario['id'] ?? '') ?>">
 
-            <label for="usuario">Usuario:</label>
+            <label for="nombre_completo">Nombre completo:</label>
+            <input type="text" name="nombre_completo" value="<?= htmlspecialchars($usuario['nombre_completo'] ?? '') ?>" required>
+
+
+            <label for="usuario">Nombre de usuario:</label>
             <input type="text" name="usuario" value="<?= htmlspecialchars($usuario['usuario'] ?? '') ?>" required>
 
-            <label for="contrasena">Contraseña:</label>
-            <input type="text" name="contrasena" value="<?= htmlspecialchars($usuario['contrasena'] ?? '') ?>" required>
+            <label for="correo">Correo electrónico:</label>
+            <input type="email" name="correo" value="<?= htmlspecialchars($usuario['correo'] ?? '') ?>" required>
+
 
             <label for="perfil">Perfil:</label>
             <select name="perfil" required>
@@ -85,7 +91,7 @@ $conexion->close();
                 <option value="ESTANDAR" <?= (isset($usuario['perfil']) && $usuario['perfil'] === 'ESTANDAR') ? 'selected' : '' ?>>ESTANDAR</option>
             </select>
 
-            <label for="activo">Activo:</label>
+            <label for="activo">Estado:</label>
             <select name="activo" required>
                 <option value="1" <?= (isset($usuario['activo']) && $usuario['activo'] === '1') ? 'selected' : '' ?>>activo</option>
                 <option value="0" <?= (isset($usuario['activo']) && $usuario['activo'] === '0') ? 'selected' : '' ?>>inactivo</option>

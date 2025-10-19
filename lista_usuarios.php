@@ -29,16 +29,16 @@ $resultado = $conexion->query("SELECT * FROM usuarios");
         <a href="agregar_usuario.php">Agregar usuario</a>
         <table border="1" cellpadding="5" cellspacing="0">
             <tr>
-                <th>Nombre de usaurio</th>
-                <th>clave</th>
+                <th>Nombre de usuario</th>
+                <th>Correo</th>
                 <th>Perfil</th>
                 <th>Estado</th>
                 <th>Acciones</th>
             </tr>
             <?php while($fila = $resultado->fetch_assoc()): ?>
                 <tr>
-                    <td><?= $fila['usuario'] ?></td>
-                    <td><?= $fila['contrasena'] ?></td>
+                    <td><?= $fila['nombre_completo'] ?></td>
+                    <td><?= $fila['correo'] ?></td>
                     <td><?= $fila['perfil'] ?></td>
                     <td><?= $fila['activo'] ? 'Activo' : 'No Activo' ?></td>
                     <td>
