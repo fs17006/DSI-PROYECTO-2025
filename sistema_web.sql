@@ -45,3 +45,33 @@ CREATE TABLE pagos (
     FOREIGN KEY (factura_id) REFERENCES facturas(id)
 );
 
+CREATE TABLE productos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    codigo VARCHAR(50) NOT NULL UNIQUE, -- Código único del producto
+    nombre VARCHAR(100) NOT NULL,
+    precio_unitario DECIMAL(10,2) NOT NULL CHECK (precio_unitario > 0),
+    activo BOOLEAN DEFAULT TRUE, -- útil para "eliminar lógicamente" si se desea
+    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+
+CREATE TABLE historial_precios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    producto_id INT NOT NULL,
+    precio_anterior DECIMAL(10,2) NOT NULL,
+    precio_nuevo DECIMAL(10,2) NOT NULL,
+    fecha_cambio TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (producto_id) REFERENCES productos(id)
+);
+
+
+CREATE TABLE detalle_factura (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    factura_id INT NOT NULL,
+    producto_id INT NOT NULL,
+    cantidad INT NOT NULL CHECK (cantidad > 0),
+    precio_unitario DECIMAL(10,2) NOT NULL,
+    subtotal DECIMAL(10,2) GENERATED ALWAYS AS (cantidad * precio_unitario) STORED,
+    FOREIGN KEY (factura_id) REFERENCES facturas(id),
+    FOREIGN KEY (producto_id) REFERENCES productos(id)
+);
