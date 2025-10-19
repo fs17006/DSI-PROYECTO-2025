@@ -13,6 +13,7 @@ if (isset($_GET['id'])) {
 
     $facturaRes = $conexion->query("SELECT * FROM facturas WHERE id = $id");
     $factura = $facturaRes->fetch_assoc();
+    $estado = $factura['estado'] ?? 'EMITIDA';
 
     $proveedores = $conexion->query("SELECT id, nombre FROM proveedores");
 
@@ -36,6 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $numero = $_POST['numero_factura'];
     $fecha = $_POST['fecha'];
     $proveedor_id = $_POST['proveedor_id'];
+    $estado = $_POST['estado'] ?? 'EMITIDA';
 
     // Calcular total automáticamente
     $total_monto = 0;
@@ -48,8 +50,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     }
 
     // Actualizar tabla facturas
-    $stmt = $conexion->prepare("UPDATE facturas SET numero_factura=?, fecha=?, monto=?, proveedor_id=? WHERE id=?");
-    $stmt->bind_param("ssdii", $numero, $fecha, $total_monto, $proveedor_id, $id);
+    $stmt = $conexion->prepare("UPDATE facturas SET numero_factura=?, fecha=?, monto=?, proveedor_id=?, estado=? WHERE id=?");
+    $stmt->bind_param("ssdssi", $numero, $fecha, $total_monto, $proveedor_id, $estado, $id);
     $stmt->execute();
 
     // Borrar detalle anterior
@@ -105,6 +107,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                     <?= htmlspecialchars($p['nombre']) ?>
                 </option>
             <?php endwhile; ?>
+        </select><br>
+
+        <label>Estado:</label>
+        <select name="estado" required>
+            <option value="EMITIDA" <?= $estado == 'EMITIDA' ? 'selected' : '' ?>>Emitida</option>
+            <option value="ANULADA" <?= $estado == 'ANULADA' ? 'selected' : '' ?>>Anulada</option>
+            <option value="RECHAZADA" <?= $estado == 'RECHAZADA' ? 'selected' : '' ?>>Rechazada</option>
         </select><br>
 
         <h3>Detalles de la Factura</h3>

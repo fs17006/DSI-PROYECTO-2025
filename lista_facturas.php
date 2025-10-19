@@ -8,7 +8,7 @@ if (!isset($_SESSION['usuario'])) {
 require "conexion.php";
 
 // Traer facturas con proveedor
-$sql = "SELECT f.id, f.numero_factura, f.fecha, f.monto, p.nombre AS proveedor 
+$sql = "SELECT f.id, f.numero_factura, f.fecha, f.monto, p.nombre AS proveedor, f.estado 
         FROM facturas f
         INNER JOIN proveedores p ON f.proveedor_id = p.id
         ORDER BY f.fecha DESC";
@@ -40,6 +40,7 @@ $resultado = $conexion->query($sql);
                 <th>Fecha</th>
                 <th>Monto</th>
                 <th>Proveedor</th>
+                <th>Estado</th>
                 <th>Acciones</th>
             </tr>
 
@@ -49,6 +50,7 @@ $resultado = $conexion->query($sql);
                     <td><?= $fila['fecha'] ?></td>
                     <td><?= number_format($fila['monto'], 2) ?></td>
                     <td><?= htmlspecialchars($fila['proveedor']) ?></td>
+                    <td><?= htmlspecialchars($fila['estado']) ?></td>
                     <td>
                         <a href="editar_factura.php?id=<?= $fila['id'] ?>">Editar</a>
                         <a href="eliminar_factura.php?id=<?= $fila['id'] ?>" onclick="return confirm('¿Seguro de eliminar esta factura?')">Eliminar</a>

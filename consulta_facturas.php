@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 if (!isset($_SESSION['usuario'])) {
     header("Location: index.php");
@@ -67,7 +71,7 @@ if (isset($_GET['export']) && $_GET['export'] == 1) {
     header("Content-Type: text/csv");
     header("Content-Disposition: attachment; filename=facturas.csv");
     $output = fopen("php://output", "w");
-    fputcsv($output, ['Número Factura', 'Fecha', 'Monto', 'Estado', 'Proveedor']);
+    fputcsv($output, ['Numero Factura', 'Fecha', 'Monto', 'Estado', 'Proveedor']);
     while ($row = $resultado->fetch_assoc()) {
         fputcsv($output, [$row['numero_factura'], $row['fecha'], $row['monto'], $row['estado'], $row['proveedor']]);
     }
