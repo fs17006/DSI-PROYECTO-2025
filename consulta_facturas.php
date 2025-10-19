@@ -68,16 +68,35 @@ $resultado = $stmt->get_result();
 
 // Exportar a Excel/CSV si se solicita
 if (isset($_GET['export']) && $_GET['export'] == 1) {
-    header("Content-Type: text/csv");
+    header("Content-Type: text/csv; charset=UTF-8");
     header("Content-Disposition: attachment; filename=facturas.csv");
+
     $output = fopen("php://output", "w");
-    fputcsv($output, ['Numero Factura', 'Fecha', 'Monto', 'Estado', 'Proveedor']);
+
+    // Agregar BOM UTF-8 para que Excel reconozca acentos
+    fprintf($output, chr(0xEF).chr(0xBB).chr(0xBF));
+
+    // Cabecera
+    fputcsv($output, ['Numero Factura', 'Fecha', 'Monto', 'Estado', 'Proveedor'], ';');
+
+    // Datos
     while ($row = $resultado->fetch_assoc()) {
-        fputcsv($output, [$row['numero_factura'], $row['fecha'], $row['monto'], $row['estado'], $row['proveedor']]);
+        // Limpiar valores
+        $fila = [
+            str_replace(["\r", "\n"], '', $row['numero_factura']),
+            $row['fecha'],
+            number_format($row['monto'], 2, '.', ''), // asegurar formato numérico correcto
+            $row['estado'],
+            str_replace(["\r", "\n"], '', $row['proveedor'])
+        ];
+
+        fputcsv($output, $fila, ';'); // usar ; como delimitador
     }
+
     fclose($output);
     exit();
 }
+
 ?>
 
 <!DOCTYPE html>

@@ -1,4 +1,9 @@
 <?php
+
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 if (!isset($_SESSION['usuario'])) {
     header("Location: index.php");
@@ -32,6 +37,36 @@ $stmt->close();
 
 $mensaje = "";
 
+// Obtener datos actuales
+$stmtOld = $conexion->prepare("SELECT nombre, codigo, actividad_economica, telefono FROM proveedores WHERE id=?");
+$stmtOld->bind_param("i", $id);
+$stmtOld->execute();
+$stmtOld->bind_result($oldNombre, $oldCodigo, $oldActividad, $oldTelefono);
+$stmtOld->fetch();
+$stmtOld->close();
+
+// Comparar campo por campo y registrar cambios
+$campos = [
+    'nombre' => [$oldNombre, $nombre],
+    'codigo' => [$oldCodigo, $codigo],
+    'actividad_economica' => [$oldActividad, $actividad],
+    'telefono' => [$oldTelefono, $telefono]
+];
+
+foreach ($campos as $campo => [$antiguo, $nuevo]) {
+    if ($antiguo != $nuevo) {
+        $stmtHist = $conexion->prepare("INSERT INTO historial_proveedores (proveedor_id, campo, valor_anterior, valor_nuevo, usuario_id) VALUES (?, ?, ?, ?, ?)");
+        $stmtHist->bind_param("isssi", $id, $campo, $antiguo, $nuevo, $_SESSION['id']); // $_SESSION['id'] = usuario logueado
+        $stmtHist->execute();
+        $stmtHist->close();
+    }
+}
+
+// Luego se actualiza la tabla proveedores
+$stmtUpd = $conexion->prepare("UPDATE proveedores SET nombre=?, codigo=?, actividad_economica=?, telefono=? WHERE id=?");
+$stmtUpd->bind_param("ssssi", $nombre, $codigo, $actividad, $telefono, $id);
+$stmtUpd->execute();
+
 // Procesar actualización
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $nombre = trim($_POST['nombre'] ?? '');
@@ -43,30 +78,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($nombre) || empty($codigo) || empty($actividad) || empty($telefono) || $usuario_id <= 0) {
         $mensaje = "Todos los campos son obligatorios.";
     } else {
-        // Validar que no exista otro proveedor con el mismo código
-        $stmtCheck = $conexion->prepare("SELECT id FROM proveedores WHERE codigo=? AND id<>?");
-        $stmtCheck->bind_param("si", $codigo, $id);
-        $stmtCheck->execute();
-        $stmtCheck->store_result();
+        // Obtener valores antiguos de la base
+        $stmtOld = $conexion->prepare("SELECT nombre, codigo, actividad_economica, telefono FROM proveedores WHERE id=?");
+        $stmtOld->bind_param("i", $id);
+        $stmtOld->execute();
+        $stmtOld->bind_result($oldNombre, $oldCodigo, $oldActividad, $oldTelefono);
+        $stmtOld->fetch();
+        $stmtOld->close();
 
-        if ($stmtCheck->num_rows > 0) {
-            $mensaje = "Ya existe otro proveedor con este NIT/DUI.";
-        } else {
-            $stmtUpdate = $conexion->prepare("UPDATE proveedores SET nombre=?, codigo=?, actividad_economica=?, telefono=?, usuario_id=? WHERE id=?");
-            $stmtUpdate->bind_param("ssssii", $nombre, $codigo, $actividad, $telefono, $usuario_id, $id);
-            $stmtUpdate->execute();
+        // Comparar y registrar cambios
+        $campos = [
+            'nombre' => [$oldNombre, $nombre],
+            'codigo' => [$oldCodigo, $codigo],
+            'actividad_economica' => [$oldActividad, $actividad],
+            'telefono' => [$oldTelefono, $telefono],
+        ];
 
-            if ($stmtUpdate->affected_rows >= 0) {
-                $mensaje = "Proveedor actualizado correctamente.";
-                header("Location: lista_proveedores.php"); exit();
+        foreach ($campos as $campo => [$antiguo, $nuevo]) {
+            if ($antiguo != $nuevo) {
+                $stmtHist = $conexion->prepare("INSERT INTO historial_proveedores (proveedor_id, campo, valor_anterior, valor_nuevo, usuario_id, fecha_modificacion) VALUES (?, ?, ?, ?, ?, NOW())");
+                $stmtHist->bind_param("isssi", $id, $campo, $antiguo, $nuevo, $_SESSION['id']);
+                $stmtHist->execute();
+                $stmtHist->close();
+            }
+        }
+
+        // Actualizar proveedor
+        $stmtUpdate = $conexion->prepare("UPDATE proveedores SET nombre=?, codigo=?, actividad_economica=?, telefono=?, usuario_id=? WHERE id=?");
+        $stmtUpdate->bind_param("ssssii", $nombre, $codigo, $actividad, $telefono, $usuario_id, $id);
+        $stmtUpdate->execute();
+        $stmtUpdate->close();
+
+        $mensaje = "Proveedor actualizado correctamente.";
+        header("Location: lista_proveedores.php"); exit();
             } else {
                 $mensaje = "Error al actualizar proveedor.";
             }
             $stmtUpdate->close();
         }
         $stmtCheck->close();
-    }
-}
 
 $conexion->close();
 ?>

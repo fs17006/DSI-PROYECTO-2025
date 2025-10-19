@@ -76,3 +76,15 @@ CREATE TABLE detalle_factura (
     FOREIGN KEY (factura_id) REFERENCES facturas(id),
     FOREIGN KEY (producto_id) REFERENCES productos(id)
 );
+
+CREATE TABLE historial_proveedores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    proveedor_id INT NOT NULL,
+    campo VARCHAR(50) NOT NULL,
+    valor_anterior VARCHAR(255),
+    valor_nuevo VARCHAR(255),
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    usuario_id INT NOT NULL,
+    FOREIGN KEY (proveedor_id) REFERENCES proveedores(id),
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);
