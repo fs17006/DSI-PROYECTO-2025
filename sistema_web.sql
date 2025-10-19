@@ -113,3 +113,7 @@ CREATE TABLE detalle_pedidos (
     FOREIGN KEY (pedido_id) REFERENCES pedidos(id),
     FOREIGN KEY (producto_id) REFERENCES productos(id)
 );
+
+ALTER TABLE detalle_pedidos
+ADD COLUMN precio_unitario DECIMAL(10,2) NOT NULL AFTER cantidad;
+
