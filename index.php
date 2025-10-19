@@ -1,9 +1,6 @@
 <?php
 session_start();
-if (isset($_SESSION['usuario'])) {
-    header('Location: plantilla.php');
-    exit();
-}
+
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -26,7 +23,7 @@ if (isset($_SESSION['usuario'])) {
         </form>
         <form action="agregar_usuario.php" method="GET" style="margin-top: 15px;">
     <input type="submit" value="Crear Usuario" />
-    </form>
+</form>
     </div>
 </body>
 </html>

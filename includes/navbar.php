@@ -10,6 +10,7 @@ $perfil = $_SESSION['perfil'];
         <li><a href="lista_proveedores.php">Administrar Proveedor</a></li>
         <li><a href="lista_usuarios.php">Administrar Usuarios</a></li>
         <li><a href="lista_facturas.php">Administrar Facturas</a></li>
+        <li><a href="lista_clientes.php">Administrar Clientes</a></li>
         <li><a href="estado_pagos.php">Estado de Pagos</a></li>
 
         <?php if ($perfil === 'ADMINISTRADOR' || $perfil === 'CONTADOR'): ?>
