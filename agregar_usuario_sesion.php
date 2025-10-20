@@ -88,12 +88,12 @@ $conexion->close();
         <input type="text" name="usuario" required>
 
         <label for="contrasena" class="required">Contraseña:</label>
-        <input type="password" name="contrasena" required>
-        <button type="button" class="btn" onclick="mostrarContrasena()">Mostrar</button>
-       
-            <button type="submit" class="btn">Guardar</button>
-            <a href="lista_usuarios.php" class="btn">Volver</a>
-            
+        <input type="password" name="contrasena" id="contrasena" required>
+        <button type="button" class="btn" onclick="mostrarContrasena()">Mostrar</button><br><br>
+        <br>
+        <button type="submit" class="btn">Registrar Usuario</button>
+        <a href="index.php" class="btn">Volver</a>
+   
     </form>
 
     

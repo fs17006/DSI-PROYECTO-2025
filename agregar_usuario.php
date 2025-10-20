@@ -1,4 +1,8 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 if (isset($_SESSION['usuario'])) {
     header('Location: plantilla.php');
@@ -60,11 +64,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="text" name="usuario" required>
 
         <label for="contrasena" class="required">Contraseña:</label>
-        <input type="password" name="contrasena" required>
-
-    <button type="submit" class="btn">Registrar Usuario</button>
-    <a href="index.php" class="btn">Volver</a>
-    <button type="button" class="btn" onclick="mostrarContrasena()">Mostrar</button><br><br>
+        <input type="password" name="contrasena" id="contrasena" required>
+         <button type="button" class="btn" onclick="mostrarContrasena()">Mostrar</button><br><br>
+        <br>
+        <button type="submit" class="btn">Registrar Usuario</button>
+        <a href="index.php" class="btn">Volver</a>
+   
         
     </form>
     
