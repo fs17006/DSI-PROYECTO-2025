@@ -35,8 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <link rel="stylesheet" href="css/estilos.css">
     <title>Agregar Usuario</title>
+    <link rel="stylesheet" href="css/estilos.css">
     <style>
         .required::after { content: " *"; color: red; }
         .error-message { color: red; display: none; margin-bottom: 10px; }
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="error-message" id="errorMsg">Por favor complete todos los campos obligatorios.</div>
 
     <form action="agregar_usuario.php" method="POST" class="formulario" id="formUsuario">
-        <label for="nombre_completo" class="required">Nombre completo:</label>
+        <label class="required">Nombre completo:</label>
         <input type="text" name="nombre_completo" required>
 
         <label for="correo" class="required">Correo electrónico:</label>
