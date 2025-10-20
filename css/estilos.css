@@ -120,6 +120,7 @@ table a:hover {
     transition: border-color 0.3s ease;
 }
 
+
 .formulario input[type="text"]:focus,
 .formulario input[type="email"]:focus,
 .formulario input[type="password"]:focus,

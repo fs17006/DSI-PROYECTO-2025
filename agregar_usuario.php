@@ -61,10 +61,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <label for="contrasena" class="required">Contraseña:</label>
         <input type="password" name="contrasena" required>
-
         <button type="submit" class="btn">Registrar Usuario</button>
         <a href="index.php" class="btn">Volver</a>
     </form>
+    
 </div>
 
 <script>
