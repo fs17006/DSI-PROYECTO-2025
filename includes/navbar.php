@@ -21,7 +21,7 @@ $perfil = $_SESSION['perfil'];
         <?php endif; ?>
 
         <li><a href="lista_productos.php">Administrar Productos</a></li>
-        <li><a href="#">Consultar Dashboard</a></li>
+        <li><a href="inventario.php">Dashboard</a></li>
         <li class="logout"><a href="logout.php">Cerrar sesión</a></li>
     </ul>
 </div>

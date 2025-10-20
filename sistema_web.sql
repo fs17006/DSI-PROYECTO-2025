@@ -53,7 +53,10 @@ CREATE TABLE productos (
     precio_unitario DECIMAL(10,2) NOT NULL CHECK (precio_unitario > 0),
     activo BOOLEAN DEFAULT TRUE, -- útil para "eliminar lógicamente" si se desea
     fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    
 );
+
+ALTER TABLE productos ADD COLUMN stock INT NOT NULL DEFAULT 0 AFTER precio_unitario;
 
 
 CREATE TABLE historial_precios (
