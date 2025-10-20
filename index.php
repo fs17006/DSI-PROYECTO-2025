@@ -20,23 +20,27 @@
 </head>
 <body>
     <div class="login-box">
-        <h2>Iniciar Sesión</h2>
-        <form id="loginForm" action="procesar_login.php" method="POST" autocomplete="off">
-            <div class="error-message" id="errorMsg">Por favor complete todos los campos obligatorios.</div>
+    <h2>Iniciar Sesión</h2>
+    <form id="loginForm" action="procesar_login.php" method="POST" autocomplete="off">
+        <div class="error-message" id="errorMsg">Por favor complete todos los campos obligatorios.</div>
 
-            <label for="usuario" class="required">Usuario:</label>
-            <input type="text" name="usuario" id="usuario" required autofocus />
-
-            <label for="contrasena" class="required">Contraseña:</label>
+        <label for="usuario" class="required">Usuario:</label><br>
+        <input type="text" name="usuario" id="usuario" required autofocus />
+        <label for="contrasena" class="required">Contraseña:</label><br>
+        <div class="ajuste-form">
             <input type="password" name="contrasena" id="contrasena" required />
+            <button type="button" class="btn" onclick="mostrarContrasena()">Mostrar</button>
+        </div>
 
-            <input type="submit" id="btnSubmit" value="Entrar" />
-        </form>
+        <div class="botones-login">
+            <input type="submit" id="btnSubmit" class="btn" value="Entrar" />
+            <a href="agregar_usuario.php" class="btn">Crear Usuario</a>
+        </div>
+    </form>
 
-        <form action="agregar_usuario.php" method="GET" style="margin-top: 15px;">
-            <input type="submit" value="Crear Usuario" />
-        </form>
-    </div>
+    
+</div>
+
 
     <script>
         const form = document.getElementById('loginForm');
@@ -58,5 +62,17 @@
             }
         });
     </script>
+
+    <script>
+    function mostrarContrasena() {
+    const input = document.getElementById('contrasena');
+    if (input.type === 'password') {
+        input.type = 'text';
+    } else {
+        input.type = 'password';
+    }
+}
+</script>
+
 </body>
 </html>
