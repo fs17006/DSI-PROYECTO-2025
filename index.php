@@ -24,21 +24,17 @@
     <form id="loginForm" action="procesar_login.php" method="POST" autocomplete="off">
         <div class="error-message" id="errorMsg">Por favor complete todos los campos obligatorios.</div>
 
-        <label for="usuario" class="required">Usuario:</label><br>
+        <label for="usuario" class="required">Usuario:</label>
         <input type="text" name="usuario" id="usuario" required autofocus />
-        <label for="contrasena" class="required">Contraseña:</label><br>
-        <div class="ajuste-form">
-            <input type="password" name="contrasena" id="contrasena" required />
-            <button type="button" class="btn" onclick="mostrarContrasena()">Mostrar</button>
-        </div>
-
-        <div class="botones-login">
-            <input type="submit" id="btnSubmit" class="btn" value="Entrar" />
-            <a href="agregar_usuario.php" class="btn">Crear Usuario</a>
-        </div>
+          
+        <label for="contrasena" class="required">Contraseña:</label>
+        <input type="password" name="contrasena" id="contrasena" required /> 
+            
+        <button type="button" class="btn" onclick="mostrarContrasena()">Mostrar</button><br><br>
+        <input type="submit" id="btnSubmit" class="btn" value="Entrar" />
+        
     </form>
-
-    
+    <a href="agregar_usuario.php" class="btn">Crear Usuario</a>
 </div>
 
 

@@ -61,8 +61,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <label for="contrasena" class="required">Contraseña:</label>
         <input type="password" name="contrasena" required>
-        <button type="submit" class="btn">Registrar Usuario</button>
-        <a href="index.php" class="btn">Volver</a>
+
+    <button type="submit" class="btn">Registrar Usuario</button>
+    <a href="index.php" class="btn">Volver</a>
+    <button type="button" class="btn" onclick="mostrarContrasena()">Mostrar</button><br><br>
+        
     </form>
     
 </div>
@@ -86,6 +89,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             errorMsg.style.display = 'none';
         }
     });
+</script>
+
+<script>
+    function mostrarContrasena() {
+    const input = document.getElementById('contrasena');
+    if (input.type === 'password') {
+        input.type = 'text';
+    } else {
+        input.type = 'password';
+    }
+}
 </script>
 </body>
 </html>

@@ -89,11 +89,11 @@ $conexion->close();
 
         <label for="contrasena" class="required">Contraseña:</label>
         <input type="password" name="contrasena" required>
-
+        <button type="button" class="btn" onclick="mostrarContrasena()">Mostrar</button>
        
             <button type="submit" class="btn">Guardar</button>
             <a href="lista_usuarios.php" class="btn">Volver</a>
-        
+            
     </form>
 
     
@@ -120,5 +120,17 @@ $conexion->close();
         }
     });
 </script>
+
+<script>
+    function mostrarContrasena() {
+    const input = document.getElementById('contrasena');
+    if (input.type === 'password') {
+        input.type = 'text';
+    } else {
+        input.type = 'password';
+    }
+}
+</script>
+
 </body>
 </html>
