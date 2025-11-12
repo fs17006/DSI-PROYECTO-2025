@@ -15,6 +15,7 @@ $perfil = $_SESSION['perfil'];
         <li><a href="lista_facturas.php">Administrar Facturas</a></li>
         <li><a href="lista_clientes.php">Administrar Clientes</a></li>
         <li><a href="estado_pagos.php">Estado de Pagos</a></li>
+        <li><a href="accesos.php">Historial de acceso</a></li>
 
         <?php if ($perfil === 'ADMINISTRADOR' || $perfil === 'CONTADOR'): ?>
             <li><a href="registrar_pago.php">Registrar Pagos</a></li>
